@@ -3,6 +3,7 @@ import logoPic from '../../assets/nav-logo.png';
 
 export const HeaderWrapper = styled.div`
   position: relative;
+  width: 100%;
   height: 56px;
   border-bottom: 1px solid #f0f0f0;
 `;
@@ -29,6 +30,7 @@ export const Nav = styled.div`
 export const NavItem = styled.div`
   line-height: 56px;
   padding: 0 15px;
+  box-sizing: border-box;
   font-size: 17px;
   color: #333;
   &.left {
@@ -61,6 +63,54 @@ export const SearchWrapper = styled.div`
     }
   }
 `;
+
+export const SearchInfo = styled.div`
+  position: absolute;
+  left: 0;
+  top: 56px;
+  width: 240px;
+  padding: 0 20px;
+  box-sizing: border-box;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+`;
+export const SearchInfoTitle = styled.div`
+  position: relative;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  line-height: 20px;
+  font-size: 14px;
+  color: #969696;
+  span.spin {
+    display: block;
+    position: absolute;
+    right: 35px;
+    top: -5px;
+    font-size: 12px;
+    transition: all 0.2s ease-in;
+    transform-origin: center center;
+  }
+`;
+export const SearchInfoSwitch = styled.span`
+  float: right;
+  font-size: 13px;
+  color: #969696;
+  cursor: pointer;
+`;
+export const SearchInfoList = styled.span`
+  overflow: hidden;
+`;
+export const SearchInfoItem = styled.a`
+  display: block;
+  float: left;
+  line-height: 20px;
+  padding: 0 5px;
+  margin-right: 10px;
+  margin-bottom: 15px;
+  font-size: 12px;
+  border-radius: 3px;
+  border: 1px solid #ddd;
+  color: #787878;
+`;
 export const NavSearch = styled.input.attrs({
   placeholder: 'search',
 })`
@@ -78,21 +128,19 @@ export const NavSearch = styled.input.attrs({
   &::placeholder {
     color: #999;
   }
-  &&.focused {
+  &.focused {
     width: 240px;
   }
-  &.slide-enter,
-  &.slide-appear {
+  &.slide-enter {
     width: 160px;
-    transition: all 0.2s ease-out;
+    transition: all 0.2s ease-in;
   }
-  &.slide-enter-active,
-  &.slide-enter-appear {
+  &.slide-enter-active {
     width: 240px;
   }
   &.slide-exit {
     width: 240px;
-    transition: all 0.2s ease-out;
+    transition: all 0.2s ease-in;
   }
   &.slide-exit-active {
     width: 160px;

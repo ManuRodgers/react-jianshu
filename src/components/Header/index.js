@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'dva';
 import { CSSTransition } from 'react-transition-group';
 import PropTypes from 'prop-types';
@@ -11,12 +11,20 @@ import {
   NavSearch,
   Addition,
   Button,
+  SearchInfo,
+  SearchInfoTitle,
+  SearchInfoSwitch,
+  SearchInfoList,
+  SearchInfoItem,
 } from './style.js';
-class Header extends PureComponent {
+class Header extends Component {
   render() {
     const { header, dispatch } = this.props;
-    const { focused } = header;
-    console.log(focused);
+    const { focused, mouseIn, trendingSearchList, page, totalPage } = header;
+    let paginatedTrendingSearchList = [];
+    for (let i = (page - 1) * 10; i < 10 * page; i++) {
+      paginatedTrendingSearchList.push(trendingSearchList[i]);
+    }
     return (
       <HeaderWrapper>
         <Logo />
@@ -32,6 +40,8 @@ class Header extends PureComponent {
               <NavSearch
                 onFocus={() => {
                   dispatch({ type: 'header/searchFocused' });
+                  trendingSearchList.length === 0 &&
+                    dispatch({ type: 'header/getTrendingSearchListAsync' });
                 }}
                 onBlur={() => {
                   dispatch({ type: 'header/searchBlurred' });
@@ -39,7 +49,56 @@ class Header extends PureComponent {
                 className={focused ? `focused` : ``}
               />
             </CSSTransition>
-            <span className={focused ? `iconfont focused` : `iconfont`}>&#xe6dd;</span>
+            <span
+              style={{ cursor: `pointer` }}
+              className={focused ? `iconfont zoom focused` : `zoom iconfont`}
+            >
+              &#xe6dd;
+            </span>
+            {focused || mouseIn ? (
+              <SearchInfo
+                onMouseEnter={() => {
+                  dispatch({ type: 'header/mouseEnter' });
+                }}
+                onMouseLeave={() => {
+                  dispatch({ type: 'header/mouseLeave' });
+                }}
+              >
+                <SearchInfoTitle>
+                  Trending
+                  <span
+                    ref={icon => {
+                      this.spinIcon = icon;
+                    }}
+                    className="iconfont spin"
+                  >
+                    &#xe851;
+                  </span>
+                  <SearchInfoSwitch
+                    onClick={() => {
+                      if (page < totalPage) {
+                        dispatch({
+                          type: 'header/changePage',
+                          page: page + 1,
+                          spin: this.spinIcon,
+                        });
+                      } else {
+                        dispatch({ type: 'header/changePage', page: 1 });
+                      }
+                    }}
+                  >
+                    换一批
+                  </SearchInfoSwitch>
+                </SearchInfoTitle>
+                <SearchInfoList>
+                  {trendingSearchList.length > 0
+                    ? paginatedTrendingSearchList.map(item => (
+                        <SearchInfoItem key={item}>{item}</SearchInfoItem>
+                      ))
+                    : null}
+                </SearchInfoList>
+              </SearchInfo>
+            ) : null}
           </SearchWrapper>
         </Nav>
         <Addition>
