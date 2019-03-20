@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
+import { Link, router } from 'umi';
+
 import { CSSTransition } from 'react-transition-group';
 import PropTypes from 'prop-types';
 import {
@@ -19,7 +21,8 @@ import {
 } from './style.js';
 class Header extends Component {
   render() {
-    const { header, dispatch } = this.props;
+    const { header, dispatch, login } = this.props;
+    console.log('TCL: Header -> render -> login', login);
     const { focused, mouseIn, trendingSearchList, page, totalPage } = header;
     let paginatedTrendingSearchList = [];
     for (let i = (page - 1) * 10; i < 10 * page; i++) {
@@ -27,14 +30,34 @@ class Header extends Component {
     }
     return (
       <HeaderWrapper>
-        <Logo />
+        {/* <Link to={`/`}>
+          <Logo />
+        </Link> */}
         <Nav>
-          <NavItem className={`left active`}>首页</NavItem>
-          <NavItem className={`left`}>下载App</NavItem>
-          <NavItem className={`right`}>登陆</NavItem>
-          <NavItem className={`right`}>
+          <Link to={`/`}>
+            <NavItem className={`left active`}>Home</NavItem>
+          </Link>
+          {login.login ? (
+            <Link
+              onClick={() => {
+                dispatch({ type: 'login/logout' });
+              }}
+              to={`/`}
+            >
+              <NavItem style={{ cursor: 'pointer' }} className={`right`}>
+                Logout
+              </NavItem>
+            </Link>
+          ) : (
+            <Link to={`login`}>
+              <NavItem style={{ cursor: 'pointer' }} className={`right`}>
+                Log In
+              </NavItem>
+            </Link>
+          )}
+          {/* <NavItem className={`right`}>
             <span className="iconfont">&#xe636;</span>
-          </NavItem>
+          </NavItem> */}
           <SearchWrapper>
             <CSSTransition in={focused} timeout={200} classNames="slide">
               <NavSearch
@@ -102,10 +125,7 @@ class Header extends Component {
           </SearchWrapper>
         </Nav>
         <Addition>
-          <Button className={`writing`}>
-            <span className="iconfont">&#xe6de;</span> 写文章
-          </Button>
-          <Button className={`reg`}>注册</Button>
+          <Button className={`reg`}>Register</Button>
         </Addition>
       </HeaderWrapper>
     );
@@ -114,11 +134,13 @@ class Header extends Component {
 
 Header.propTypes = {
   header: PropTypes.object.isRequired,
+  login: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = ({ header }) => ({
+const mapStateToProps = ({ header, login }) => ({
   header,
+  login,
 });
 
 export default connect(mapStateToProps)(Header);

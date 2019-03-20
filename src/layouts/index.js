@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import withRouter from 'umi/withRouter';
+import Header from '../components/Header';
+import { GlobalStyle } from '../style';
 import PropTypes from 'prop-types';
 
 class GlobalLayout extends Component {
@@ -12,7 +14,13 @@ class GlobalLayout extends Component {
 
   render() {
     const { children } = this.props;
-    return <div>{children}</div>;
+    return (
+      <div>
+        <GlobalStyle />
+        <Header />
+        {children}
+      </div>
+    );
   }
 }
 

@@ -27,4 +27,7 @@ export default {
       },
     ],
   ],
+  theme: {
+    '@primary-color': '#E8705E',
+  },
 };
